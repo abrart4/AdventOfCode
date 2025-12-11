@@ -1,4 +1,7 @@
 import java.io.File;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 
@@ -22,6 +25,7 @@ public class Day2 {
             long max = Long.parseLong(maxString);
             for (long id = min; id <= max; id ++) {
                 if (isInvalid(id)) {
+                    System.out.println("id " + id + " invalid");
                     sum += id;
                 }
             }
@@ -30,6 +34,32 @@ public class Day2 {
     }
 
     private static boolean isInvalid(long id) {
+        String[] digitStrings = String.valueOf(id).split("");
+        int[] digits = new int[digitStrings.length];
+        for (int i = 0; i < digitStrings.length; i ++) {
+            digits[i] = Integer.parseInt(digitStrings[i]);
+        }
+        Map<Integer, Integer> lastSeen = new HashMap<>();
+        for (int i = 0; i < digits.length; i ++) {
+            int digit = digits[i];
+            if (lastSeen.containsKey(digit)) {
+                int seenOn = lastSeen.get(digit);
+                int difference = i - seenOn;
+                boolean allEqual = true;
+                if (difference + i <= digits.length) {
+                    for (int j = 0; j < difference; j++) {
+                        if (digits[j] != digits[i + j]) {
+                            allEqual = false;
+                        }
+                    }
+                    if (allEqual) {
 
+                        return true;
+                    }
+                }
+            }
+            lastSeen.put(digit, i);
+        }
+        return false;
     }
 }
