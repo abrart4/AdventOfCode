@@ -1,12 +1,14 @@
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Scanner;
+import java.util.Set;
 
 
 
 public class Day5 {
     public static void main(String[] args) throws Exception {
-        part1();
+        part2();
     }
 
     private static void part1() throws Exception {
@@ -41,5 +43,24 @@ public class Day5 {
             }
         }
         System.out.println("Day 5 part 1: " + freshAmount);
+    }
+
+    private static void part2() throws Exception {
+        Scanner input = new Scanner(new File("my day 5 input.txt"));
+        // set
+        Set<Long> acceptableValues = new HashSet<>();
+        while (input.hasNextLine()) {
+            String line = input.nextLine();
+            if (line.equals("")) break;
+            int indexOfDash = line.indexOf("-");
+            String lowerBoundString = line.substring(0, indexOfDash);
+            String upperBoundString = line.substring(indexOfDash + 1);
+            long lowerBound = Long.parseLong(lowerBoundString);
+            long upperBound = Long.parseLong(upperBoundString);
+            for (long i = lowerBound; i <= upperBound; i ++) {
+                acceptableValues.add(i);
+            }
+        }
+        System.out.println("Day 5 part 2: " + acceptableValues.size());
     }
 }
