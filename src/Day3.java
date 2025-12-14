@@ -43,13 +43,18 @@ public class Day3 {
             for (int i = 0; i < digitStrings.length; i ++) {
                 digits[i] = Integer.parseInt(digitStrings[i]);
             }
-            digits = tascosort(digits);
-            String bestJoltageString = "";
-            for (int i = 0; i < 12; i ++) {
-                bestJoltageString += digits[i];
+            Map<Integer, ArrayList<Integer>> numberToIndices = new HashMap<>();
+            for (int numberToLookFor = 9; numberToLookFor >= 0; numberToLookFor --) {
+                ArrayList<Integer> list = new ArrayList<>();
+                numberToIndices.put(numberToLookFor, list);
+                for (int i = 0; i < digits.length; i ++) {
+                    int digit = digits[i];
+                    if (digit == numberToLookFor) {
+                        list.add(i);
+                    }
+                }
             }
-            long bestJoltage = Long.parseLong(bestJoltageString);
-            totalJoltage += bestJoltage;
+            System.out.println(numberToIndices);
         }
         System.out.println("Day 3 part 2: " + totalJoltage);
     }
