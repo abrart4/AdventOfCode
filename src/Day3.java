@@ -43,9 +43,20 @@ public class Day3 {
             for (int i = 0; i < digitStrings.length; i ++) {
                 digits[i] = Integer.parseInt(digitStrings[i]);
             }
-            long bestJoltageSoFar = -1;
-
-            totalJoltage += bestJoltageSoFar;
+            int indexOfBestOne = 0;
+            String stringThing = "";
+            for (int i = 12; i > 0; i --) {
+                int bestOne = -1;
+                for (int j = indexOfBestOne; j < digits.length; j ++) {
+                    int digit = digits[j];
+                    if (digit > bestOne && digits.length - j >= i) {
+                        bestOne = digit;
+                        indexOfBestOne = j + 1;
+                    }
+                }
+                stringThing += bestOne;
+            }
+            totalJoltage += Long.parseLong(stringThing);
         }
         System.out.println("Day 3 part 2: " + totalJoltage);
     }
