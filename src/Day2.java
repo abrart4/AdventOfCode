@@ -1,17 +1,15 @@
 import java.io.File;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 
 
 public class Day2 {
     public static void main(String[] args) throws Exception {
-        part1();
+        part(1);
+        part(2);
     }
 
-    private static void part1() throws Exception {
+    private static void part(int part) throws Exception {
         long sum = 0;
 
         Scanner input = new Scanner(new File("my day 2 input.txt"));
@@ -24,15 +22,15 @@ public class Day2 {
             long min = Long.parseLong(minString);
             long max = Long.parseLong(maxString);
             for (long id = min; id <= max; id ++) {
-                if (isInvalid(id)) {
+                if ((part == 1 && isInvalidPart1(id)) || (part == 2 && isInvalidPart2(id))) {
                     sum += id;
                 }
             }
         }
-        System.out.println("Day 3: " + sum);
+        System.out.println("Day 2 part " + part + ": " + sum);
     }
 
-    private static boolean isInvalid(long id) {
+    private static boolean isInvalidPart1(long id) {
         String[] digitStrings = String.valueOf(id).split("");
         int[] digits = new int[digitStrings.length];
         for (int i = 0; i < digitStrings.length; i ++) {
@@ -64,5 +62,25 @@ public class Day2 {
         return false;
         // ID:    12341234
         // Index: 01234567
+    }
+
+    private static boolean isInvalidPart2(long id) {
+        String idString = String.valueOf(id);
+        for (int i = 0; i < idString.length(); i ++) {
+            String seq = idString.substring(0, i + 1);
+            // i haven't commented anything else and i want to explain how this works but i don't want to think about it
+            String[] splitThing = (idString + "?").split(seq);
+            boolean yay = true;
+            for (int j = 0; j < splitThing.length - 1; j ++) {
+                String character = splitThing[j];
+                if (!character.equals("")) yay = false;
+            }
+            if (!splitThing[splitThing.length - 1].equals("?")) yay = false;
+            if (splitThing.length < 3) yay = false;
+            if (yay) {
+                return true;
+            }
+        }
+        return false;
     }
 }
