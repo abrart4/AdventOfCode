@@ -82,10 +82,23 @@ public class Day5 {
                 20-20 undistinct, unchanged
                 20-25 undistinct, change by setting upper bound of original to 25
                  */
+
             }
             if (distinct) {
                 distinctRanges.add(new long[] {lowerBound, upperBound});
             }
+        }
+        {
+            String x = "";
+            x += "(";
+            for (long[] range: distinctRanges) {
+                x += range[0];
+                x += "-";
+                x += range[1];
+                x += ", ";
+            }
+            x += ")";
+            System.out.println(x);
         }
         long acceptableValues = 0;
         for (int i = 0; i < distinctRanges.size(); i ++) {
