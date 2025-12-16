@@ -82,7 +82,14 @@ public class Day5 {
                 20-20 undistinct, unchanged
                 20-25 undistinct, change by setting upper bound of original to 25
                  */
-
+                if (lowerBound <= otherLowerBound && otherUpperBound <= upperBound) {
+                    distinct = false;
+                    distinctRange[0] = lowerBound;
+                    distinctRange[1] = upperBound;
+                }
+                if (!distinct) {
+                    break;
+                }
             }
             if (distinct) {
                 distinctRanges.add(new long[] {lowerBound, upperBound});
