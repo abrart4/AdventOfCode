@@ -1,9 +1,5 @@
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Scanner;
-import java.util.Set;
-
+import java.util.*;
 
 
 public class Day5 {
@@ -59,30 +55,24 @@ public class Day5 {
             long lowerBound = Long.parseLong(lowerBoundString);
             long upperBound = Long.parseLong(upperBoundString);
             boolean distinct = true;
-            for (int i = 0; i < distinctRanges.size(); i ++) {
-                long[] distinctRange = distinctRanges.get(i);
-                long otherLowerBound = distinctRange[0];
-                long otherUpperBound = distinctRange[1];
-                /*
-                hypotheticals:
-                original: 10-20
-                new:
-                5-5 distinct, unchanged
-                5-10 undistinct, change by setting lower bound of original to 5
-                5-15 undistinct, change by setting lower bound of original to 5
-                5-20 undistinct, change by setting lower bound of original to 5
-                5-25 undistinct, change by setting lower bound of original to 5 and upper bound of original to 25
-                10-10 undistinct, unchanged
-                10-15 undistinct, unchanged
-                10-20 undistinct, unchanged
-                10-25 undistinct, change by setting upper bound of original to 25
-                15-15 undistinct, unchanged
-                15-20 undistinct, unchanged
-                15-25 undistinct, change by setting upper bound of original to 25
-                20-20 undistinct, unchanged
-                20-25 undistinct, change by setting upper bound of original to 25
-                 */
+            boolean isTheSame = false;
+            for (int id = 0; id < 1000; id ++) {
+                ArrayList<long[]> original = new ArrayList<>(distinctRanges);
+                for (int i = 0; i < distinctRanges.size(); i ++) {
+                    long[] distinctRange = distinctRanges.get(i);
+                    long otherLowerBound = distinctRange[0];
+                    long otherUpperBound = distinctRange[1];
 
+                    if (lowerBound <= otherLowerBound && upperBound >= otherLowerBound && upperBound <= otherUpperBound) {
+                        distinct = false;
+                        distinctRange[0] = lowerBound;
+                    }
+                    if (lowerBound >= otherLowerBound && lowerBound <= otherUpperBound) {
+                        distinct = false;
+                        distinctRange[1] = up;
+                    }
+                }
+                isTheSame = eq(distinctRanges, original);
             }
             if (distinct) {
                 distinctRanges.add(new long[] {lowerBound, upperBound});
@@ -110,5 +100,13 @@ public class Day5 {
             acceptableValues += (upper - lower) + 1;
         }
         System.out.println("Day 5 part 2: " + acceptableValues);
+    }
+
+    private static boolean eq(ArrayList<long[]> first, ArrayList<long[]> second) {
+        boolean isAllTheSame = true;
+        for (int i = 0; i < first.size(); i ++) {
+            if (!Arrays.equals(first.get(i), second.get(i))) isAllTheSame = false;
+        }
+        return isAllTheSame;
     }
 }
