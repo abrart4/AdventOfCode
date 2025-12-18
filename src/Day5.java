@@ -45,39 +45,64 @@ public class Day5 {
         Scanner input = new Scanner(new File("my day 5 input.txt"));
         ArrayList<long[]> distinctRanges = new ArrayList<>();
         while (input.hasNextLine()) {
-            String line = input.nextLine();
-            if (line.equals("")) {
-                break;
-            }
-            int indexOfDash = line.indexOf("-");
-            String lowerBoundString = line.substring(0, indexOfDash);
-            String upperBoundString = line.substring(indexOfDash + 1);
+            String nextLine = input.nextLine();
+            int indexOfDash = nextLine.indexOf("-");
+            String lowerBoundString = nextLine.substring(0, indexOfDash);
+            String upperBoundString = nextLine.substring(indexOfDash + 1);
             long lowerBound = Long.parseLong(lowerBoundString);
             long upperBound = Long.parseLong(upperBoundString);
-            boolean distinct = true;
-            boolean isTheSame = false;
-            for (int id = 0; id < 1000; id ++) {
-                ArrayList<long[]> original = new ArrayList<>(distinctRanges);
-                for (int i = 0; i < distinctRanges.size(); i ++) {
-                    long[] distinctRange = distinctRanges.get(i);
-                    long otherLowerBound = distinctRange[0];
-                    long otherUpperBound = distinctRange[1];
+            distinctRanges.add(new long[] {lowerBound, upperBound});
+        }
 
-                    if (lowerBound <= otherLowerBound && upperBound >= otherLowerBound && upperBound <= otherUpperBound) {
-                        distinct = false;
-                        distinctRange[0] = lowerBound;
-                    }
-                    if (lowerBound >= otherLowerBound && lowerBound <= otherUpperBound) {
-                        distinct = false;
-                        distinctRange[1] = up;
+        boolean isTheSame = false;
+        while (!isTheSame) {
+            ArrayList<long[]> original = new ArrayList<>(distinctRanges);
+            ArrayList<Integer> indicesToRemove = new ArrayList<>();
+            ArrayList<Double> hashesThatAlreadyHaveRemovals = new ArrayList<>();
+            for (int current = 0; current < distinctRanges.size(); current ++) {
+                long[] distinctRange = distinctRanges.get(current);
+                long lowerBound = distinctRange[0];
+                long upperBound = distinctRange[1];
+                for (int other = 0; other < distinctRanges.size(); other ++) {
+                    if (other != current) {
+                        long[] otherDistinctRange = distinctRanges.get(other);
+                        long otherLowerBound = otherDistinctRange[0];
+                        long otherUpperBound = otherDistinctRange[1];
+                        double hash = Math.random();
+                        // full wrap
+                        // example: comparing 10-20 with 12-18
+                        if (lowerBound < otherLowerBound && otherUpperBound > upperBound && !hashesThatAlreadyHaveRemovals.contains(hash)) {
+                            indicesToRemove.add(other);
+                            hashesThatAlreadyHaveRemovals.add(hash);
+
+                        }
+                        // [ { ] }
+                        // example: comparing 8-12 with 10-14
+                        if (lowerBound < otherLowerBound && otherLowerBound < upperBound && upperBound < otherUpperBound && !hashesThatAlreadyHaveRemovals.contains(hash)) {
+                            indicesToRemove.add(current);
+                            otherDistinctRange[0] = lowerBound;
+                            hashesThatAlreadyHaveRemovals.add(hash);
+                        }
+                        // { [ } ]
+                        // example: comparing 12-16 with 10-14
+                        if (otherLowerBound < lowerBound && lowerBound < otherUpperBound && otherUpperBound < upperBound && !hashesThatAlreadyHaveRemovals.contains(hash)) {
+                            indicesToRemove.add(current);
+                            otherDistinctRange[1] = upperBound;
+                            hashesThatAlreadyHaveRemovals.add(hash);
+                        }
                     }
                 }
-                isTheSame = eq(distinctRanges, original);
             }
-            if (distinct) {
-                distinctRanges.add(new long[] {lowerBound, upperBound});
+            for (int i = 0; i < indicesToRemove.size(); i ++) {
+                int indexToRemove = indicesToRemove.get(i);
+
+                distinctRanges.remove(indexToRemove);
             }
+            indicesToRemove.clear();
+
+            isTheSame = eq(original, distinctRanges);
         }
+
         {
             String x = "";
             x += "(";
