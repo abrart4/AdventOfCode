@@ -98,7 +98,6 @@ public class Day5 {
 
                 distinctRanges.remove(indexToRemove);
             }
-            indicesToRemove.clear();
 
             isTheSame = eq(original, distinctRanges);
         }
