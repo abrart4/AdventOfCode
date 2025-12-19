@@ -127,8 +127,11 @@ public class Day5 {
     }
 
     private static boolean eq(ArrayList<long[]> first, ArrayList<long[]> second) {
+        int firstSize = first.size();
+        int secondSize = second.size();
+        if (firstSize != secondSize) return false;
         boolean isAllTheSame = true;
-        for (int i = 0; i < first.size(); i ++) {
+        for (int i = 0; i < firstSize; i ++) {
             if (!Arrays.equals(first.get(i), second.get(i))) isAllTheSame = false;
         }
         return isAllTheSame;
