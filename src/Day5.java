@@ -72,36 +72,51 @@ public class Day5 {
                         // full wrap
                         // example: comparing 10-20 with 12-18
                         if (lowerBound < otherLowerBound && otherUpperBound > upperBound && !hashesThatAlreadyHaveRemovals.contains(hash)) {
-                            indicesToRemove.add(other);
+                           //  indicesToRemove.add(other);
                             hashesThatAlreadyHaveRemovals.add(hash);
 
                         }
                         // [ { ] }
                         // example: comparing 8-12 with 10-14
                         if (lowerBound < otherLowerBound && otherLowerBound < upperBound && upperBound < otherUpperBound && !hashesThatAlreadyHaveRemovals.contains(hash)) {
-                            indicesToRemove.add(current);
+                            // indicesToRemove.add(current);
                             otherDistinctRange[0] = lowerBound;
                             hashesThatAlreadyHaveRemovals.add(hash);
                         }
                         // { [ } ]
                         // example: comparing 12-16 with 10-14
                         if (otherLowerBound < lowerBound && lowerBound < otherUpperBound && otherUpperBound < upperBound && !hashesThatAlreadyHaveRemovals.contains(hash)) {
-                            indicesToRemove.add(current);
+                            // indicesToRemove.add(current);
                             otherDistinctRange[1] = upperBound;
                             hashesThatAlreadyHaveRemovals.add(hash);
                         }
                     }
                 }
             }
-            for (int i = 0; i < indicesToRemove.size(); i ++) {
-                int indexToRemove = indicesToRemove.get(i);
-
-                distinctRanges.remove(indexToRemove);
-            }
 
             isTheSame = eq(original, distinctRanges);
         }
+        ArrayList<long[]> onesToRemove = new ArrayList<long[]>();
+        for (int i = 0; i < distinctRanges.size(); i ++) {
+            long[] distinctRange = distinctRanges.get(i);
+            long lowerBound = distinctRange[0];
+            long upperBound = distinctRange[1];
 
+            for (int j = 0; j < distinctRanges.size(); j ++) {
+                if (j != i) {
+                    long[] otherDistinctRange = distinctRanges.get(j);
+                    long otherLowerBound = otherDistinctRange[0];
+                    long otherUpperBound = otherDistinctRange[1];
+                    if (lowerBound <= otherLowerBound && otherUpperBound <= upperBound) {
+                        onesToRemove.add(otherDistinctRange);
+                    }
+                }
+            }
+        }
+        for (int i = 0; i < onesToRemove.size(); i ++) {
+            long[] oneToRemove = onesToRemove.get(i);
+            distinctRanges.remove(oneToRemove);
+        }
         {
             String x = "";
             x += "(";
