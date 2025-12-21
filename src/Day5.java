@@ -66,53 +66,18 @@ public class Day5 {
             System.out.println(lk.size());
         }
         else {
-            boolean isTheSame = false;
-            ArrayList<long[]> distinctRanges = new ArrayList<>();
-            while (!isTheSame) {
-                ArrayList<long[]> original = new ArrayList(distinctRanges);
-                distinctRanges.clear();
-                for (int i = 0; i < ranges.size(); i ++) {
-                    long[] range = ranges.get(i);
-                    long lowerBound = range[0];
-                    long upperBound = range[1];
-                    boolean shouldAdd = true;
-                    for (int j = 0; j < distinctRanges.size(); j ++) {
-                        long[] alreadyRange = distinctRanges.get(j);
-                        long alreadyLowerBound = alreadyRange[0];
-                        long alreadyUpperBound = alreadyRange[1];
-                        System.out.println("range " + Arrays.toString(range) + " and alreadyRange " + Arrays.toString(alreadyRange));
-                        if (alreadyLowerBound <= lowerBound && lowerBound <= alreadyUpperBound && alreadyUpperBound <= upperBound) {
-                            shouldAdd = false;
-                            alreadyRange[1] = upperBound;
-                        }
-                    }
-                    if (shouldAdd) {
-                        distinctRanges.add(range);
-                    }
-                }
-
-                isTheSame = eq(original, distinctRanges);
+            long minner = Long.MAX_VALUE;
+            long maxxer = Long.MIN_VALUE;
+            for (int i = 0; i < ranges.size(); i ++) {
+                long[] range = ranges.get(i);
+                long lowerBound = range[0];
+                long upperBound = range[1];
+                minner = Math.min(minner, lowerBound);
+                maxxer = Math.max(maxxer, upperBound);
             }
-            String x = "";
-            x += "(";
-            for (long[] range : distinctRanges) {
-                x += range[0];
-                x += "-";
-                x += range[1];
-                x += ", ";
-            }
-            x += ")";
-            System.out.println(x);
+            System.out.println(minner);
+            System.out.println(maxxer);
             long acceptableValues = 0;
-            for (int i = 0; i < distinctRanges.size(); i++) {
-                long[] distinctRange = distinctRanges.get(i);
-                long lower = distinctRange[0];
-                long upper = distinctRange[1];
-                // if 5 to 10 then that's 5 6 7 8 9 10 or 6 values
-                // (upper - lower) + 1
-                acceptableValues += Math.abs(upper - lower) + 1;
-
-            }
             System.out.println("Day 5 part 2: " + acceptableValues);
         }
     }
