@@ -68,14 +68,11 @@ public class Day5 {
         else {
             boolean isTheSame = false;
             ArrayList<long[]> distinctRanges = new ArrayList<>();
-            ArrayList<long[]> merged = new ArrayList<>();
             while (!isTheSame) {
-                ArrayList<long[]> original = new ArrayList<>(distinctRanges);
+                ArrayList<long[]> original = new ArrayList(distinctRanges);
                 distinctRanges.clear();
-                ArrayList<long[]> badOther = new ArrayList<>();
                 for (int i = 0; i < ranges.size(); i ++) {
                     long[] range = ranges.get(i);
-                    //if (merged.contains(range)) continue;
                     long lowerBound = range[0];
                     long upperBound = range[1];
                     boolean shouldAdd = true;
@@ -84,34 +81,16 @@ public class Day5 {
                         long alreadyLowerBound = alreadyRange[0];
                         long alreadyUpperBound = alreadyRange[1];
                         System.out.println("range " + Arrays.toString(range) + " and alreadyRange " + Arrays.toString(alreadyRange));
-                        if (lowerBound <= alreadyLowerBound && alreadyLowerBound <= upperBound && upperBound <= alreadyUpperBound) {
-                            shouldAdd = false;
-                            merged.add(range);
-                            alreadyRange[0] = lowerBound;
-                            alreadyLowerBound = lowerBound;
-                        }
                         if (alreadyLowerBound <= lowerBound && lowerBound <= alreadyUpperBound && alreadyUpperBound <= upperBound) {
-                            merged.add(range);
                             shouldAdd = false;
                             alreadyRange[1] = upperBound;
-                            alreadyUpperBound = upperBound;
-                        }
-                        if (alreadyLowerBound <= lowerBound && upperBound <= alreadyUpperBound) {
-                            merged.add(range);
-                            shouldAdd = false;
-                        }
-                        if (lowerBound <= alreadyLowerBound && alreadyUpperBound <= upperBound) {
-                            merged.add(alreadyRange);
-                            badOther.add(alreadyRange);
                         }
                     }
                     if (shouldAdd) {
                         distinctRanges.add(range);
                     }
                 }
-                for (int i = 0; i < badOther.size(); i ++) {
-                    distinctRanges.remove(badOther.get(i));
-                }
+
                 isTheSame = eq(original, distinctRanges);
             }
             String x = "";
