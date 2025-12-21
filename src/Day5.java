@@ -44,7 +44,7 @@ public class Day5 {
 
     private static void part2() throws Exception {
         Scanner input = new Scanner(new File("my day 5 input.txt"));
-        ArrayList<long[]> distinctRanges = new ArrayList<>();
+        ArrayList<long[]> ranges = new ArrayList<>();
         while (input.hasNextLine()) {
             String nextLine = input.nextLine();
             int indexOfDash = nextLine.indexOf("-");
@@ -53,12 +53,12 @@ public class Day5 {
                 String upperBoundString = nextLine.substring(indexOfDash + 1);
                 long lowerBound = Long.parseLong(lowerBoundString);
                 long upperBound = Long.parseLong(upperBoundString);
-                distinctRanges.add(new long[] {lowerBound, upperBound});
+                ranges.add(new long[] {lowerBound, upperBound});
             }
         }
         if (false) {
             Set<Long> lk = new HashSet<>();
-            for (long[] dr : distinctRanges) {
+            for (long[] dr : ranges) {
                 for (long h = dr[0]; h <= dr[1]; h++) {
                     lk.add(h);
                 }
@@ -66,8 +66,33 @@ public class Day5 {
             System.out.println(lk.size());
         }
         else {
+            boolean isTheSame = false;
+            ArrayList<long[]> distinctRanges = new ArrayList<>();
+            while (!isTheSame) {
+                ArrayList<long[]> original = new ArrayList(distinctRanges);
+                distinctRanges.clear();
+                for (int i = 0; i < ranges.size(); i ++) {
+                    long[] range = ranges.get(i);
+                    long lowerBound = range[0];
+                    long upperBound = range[1];
+                    boolean shouldAdd = true;
+                    for (int j = 0; j < distinctRanges.size(); j ++) {
+                        long[] alreadyRange = distinctRanges.get(j);
+                        long alreadyLowerBound = alreadyRange[0];
+                        long alreadyUpperBound = alreadyRange[1];
+                        System.out.println("range " + Arrays.toString(range) + " and alreadyRange " + Arrays.toString(alreadyRange));
+                        if (alreadyLowerBound <= lowerBound && lowerBound <= alreadyUpperBound && alreadyUpperBound <= upperBound) {
+                            shouldAdd = false;
+                            alreadyRange[1] = upperBound;
+                        }
+                    }
+                    if (shouldAdd) {
+                        distinctRanges.add(range);
+                    }
+                }
 
-
+                isTheSame = eq(original, distinctRanges);
+            }
             String x = "";
             x += "(";
             for (long[] range : distinctRanges) {
