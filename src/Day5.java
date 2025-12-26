@@ -2,7 +2,6 @@ import java.io.File;
 import java.util.*;
 
 
-
 public class Day5 {
     public static void main(String[] args) throws Exception {
         part2();
@@ -44,7 +43,7 @@ public class Day5 {
 
     private static void part2() throws Exception {
         Scanner input = new Scanner(new File("my day 5 input.txt"));
-        ArrayList<long[]> ranges = new ArrayList<>();
+        ArrayList<long[]> distinctRanges = new ArrayList<>();
         while (input.hasNextLine()) {
             String nextLine = input.nextLine();
             int indexOfDash = nextLine.indexOf("-");
@@ -53,56 +52,85 @@ public class Day5 {
                 String upperBoundString = nextLine.substring(indexOfDash + 1);
                 long lowerBound = Long.parseLong(lowerBoundString);
                 long upperBound = Long.parseLong(upperBoundString);
-                ranges.add(new long[] {lowerBound, upperBound});
+                distinctRanges.add(new long[] {lowerBound, upperBound});
             }
         }
         if (false) {
-            Set<Long> lk = new HashSet<>();
-            for (long[] dr : ranges) {
-                for (long h = dr[0]; h <= dr[1]; h++) {
-                    lk.add(h);
-                }
+        Set<Long> lk = new HashSet<>();
+        for (long[] dr : distinctRanges) {
+            for (long h = dr[0]; h <= dr[1]; h++) {
+                lk.add(h);
             }
-            System.out.println(lk.size());
         }
-        else {
+        System.out.println(lk.size());
+    }
+        else{
             boolean isTheSame = false;
-            ArrayList<long[]> distinctRanges = new ArrayList<>();
             while (!isTheSame) {
-                ArrayList<long[]> original = new ArrayList(distinctRanges);
-                distinctRanges.clear();
-                for (int i = 0; i < ranges.size(); i ++) {
-                    long[] range = ranges.get(i);
-                    long lowerBound = range[0];
-                    long upperBound = range[1];
-                    boolean shouldAdd = true;
-                    for (int j = 0; j < distinctRanges.size(); j ++) {
-                        long[] alreadyRange = distinctRanges.get(j);
-                        long alreadyLowerBound = alreadyRange[0];
-                        long alreadyUpperBound = alreadyRange[1];
-                        System.out.println("range " + Arrays.toString(range) + " and alreadyRange " + Arrays.toString(alreadyRange));
-                        if (alreadyLowerBound <= lowerBound && lowerBound <= alreadyUpperBound && alreadyUpperBound <= upperBound) {
-                            shouldAdd = false;
-                            alreadyRange[1] = upperBound;
+                ArrayList<long[]> original = new ArrayList<>(distinctRanges);
+                Set<Integer> badIndices = new HashSet<>();
+                for (int current = 0; current < distinctRanges.size(); current++) {
+                    if (badIndices.contains(current)) continue;
+                    long[] distinctRange = distinctRanges.get(current);
+                    long lowerBound = distinctRange[0];
+                    long upperBound = distinctRange[1];
+                    for (int other = 0; other < distinctRanges.size(); other++) {
+                        if (other != current && !badIndices.contains(other)) {
+                            long[] otherDistinctRange = distinctRanges.get(other);
+                            long otherLowerBound = otherDistinctRange[0];
+                            long otherUpperBound = otherDistinctRange[1];
+
+                            // 50-75 with 60-80
+                            // result: 50-80
+                            if (lowerBound <= otherLowerBound && otherLowerBound <= upperBound && upperBound <= otherUpperBound) {
+                                distinctRange[1] = otherUpperBound;
+                                badIndices.add(other);
+                            }
+                            // 50-80 with 45-75
+                            if (otherLowerBound <= lowerBound && lowerBound <= otherUpperBound && otherUpperBound <= upperBound) {
+                                distinctRange[0] = otherLowerBound;
+                                badIndices.add(other);
+                            }
+
                         }
-                    }
-                    if (shouldAdd) {
-                        distinctRanges.add(range);
                     }
                 }
 
                 isTheSame = eq(original, distinctRanges);
             }
-            String x = "";
-            x += "(";
-            for (long[] range : distinctRanges) {
-                x += range[0];
-                x += "-";
-                x += range[1];
-                x += ", ";
+            ArrayList<long[]> onesToRemove = new ArrayList<>();
+            for (int i = 0; i < distinctRanges.size(); i++) {
+                long[] distinctRange = distinctRanges.get(i);
+                long lowerBound = distinctRange[0];
+                long upperBound = distinctRange[1];
+
+                for (int j = 0; j < distinctRanges.size(); j++) {
+                    if (j != i) {
+                        long[] otherDistinctRange = distinctRanges.get(j);
+                        long otherLowerBound = otherDistinctRange[0];
+                        long otherUpperBound = otherDistinctRange[1];
+                        if (lowerBound <= otherLowerBound && otherUpperBound <= upperBound) {
+                            onesToRemove.add(otherDistinctRange);
+                        }
+                    }
+                }
             }
-            x += ")";
-            System.out.println(x);
+            for (int i = 0; i < onesToRemove.size(); i++) {
+                long[] oneToRemove = onesToRemove.get(i);
+                distinctRanges.remove(oneToRemove);
+            }
+            {
+                String x = "";
+                x += "(";
+                for (long[] range : distinctRanges) {
+                    x += range[0];
+                    x += "-";
+                    x += range[1];
+                    x += ", ";
+                }
+                x += ")";
+                System.out.println(x);
+            }
             long acceptableValues = 0;
             for (int i = 0; i < distinctRanges.size(); i++) {
                 long[] distinctRange = distinctRanges.get(i);
@@ -110,25 +138,19 @@ public class Day5 {
                 long upper = distinctRange[1];
                 // if 5 to 10 then that's 5 6 7 8 9 10 or 6 values
                 // (upper - lower) + 1
-                acceptableValues += Math.abs(upper - lower) + 1;
-
+                acceptableValues += (upper - lower) + 1;
             }
             System.out.println("Day 5 part 2: " + acceptableValues);
         }
     }
 
-
     private static boolean eq(ArrayList<long[]> first, ArrayList<long[]> second) {
         int firstSize = first.size();
         int secondSize = second.size();
-        if (firstSize != secondSize) {
-            return false;
-        }
+        if (firstSize != secondSize) return false;
         boolean isAllTheSame = true;
-        for (int i = 0; i < firstSize; i++) {
-            if (!Arrays.equals(first.get(i), second.get(i))) {
-                isAllTheSame = false;
-            }
+        for (int i = 0; i < firstSize; i ++) {
+            if (!Arrays.equals(first.get(i), second.get(i))) isAllTheSame = false;
         }
         return isAllTheSame;
     }
