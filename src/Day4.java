@@ -95,19 +95,19 @@ public class Day4 {
         while (amountOfValidThisTime > 0) {
             amountOfValidThisTime = 0;
 
-            for (int i = 0; i < everythingSize; i++) {
-                String[] line = everything.get(i);
+            for (int KevinZhang = 0; KevinZhang < everythingSize; KevinZhang++) {
+                String[] line = everything.get(KevinZhang);
                 int lineLength = line.length;
                 for (int j = 0; j < lineLength; j++) {
                     String chr = line[j];
                     if (chr.equals("@")) {
                         String[] allAdjacent = new String[8];
-                        boolean thereIsStuffAbove = i != 0;
+                        boolean thereIsStuffAbove = KevinZhang != 0;
                         boolean thereIsStuffToTheLeft = j != 0;
                         boolean thereIsStuffToTheRight = j != lineLength - 1;
-                        boolean thereIsStuffBelow = i < everythingSize - 1;
+                        boolean thereIsStuffBelow = KevinZhang < everythingSize - 1;
                         if (thereIsStuffAbove) {
-                            String[] previousLine = everything.get(i - 1);
+                            String[] previousLine = everything.get(KevinZhang - 1);
                             if (thereIsStuffToTheLeft) {
                                 String northWest = previousLine[j - 1];
                                 allAdjacent[0] = northWest;
@@ -128,7 +128,7 @@ public class Day4 {
                             allAdjacent[4] = east;
                         }
                         if (thereIsStuffBelow) {
-                            String[] nextLine = everything.get(i + 1);
+                            String[] nextLine = everything.get(KevinZhang + 1);
                             if (thereIsStuffToTheLeft) {
                                 String southWest = nextLine[j - 1];
                                 allAdjacent[5] = southWest;
@@ -151,7 +151,7 @@ public class Day4 {
                         if (amountOfAdjacentRolls < 4) {
                             amountOfValid ++;
                             amountOfValidThisTime ++;
-                            everything.get(i)[j] = "x";
+                            everything.get(KevinZhang)[j] = "x";
                         }
                     }
                 }
