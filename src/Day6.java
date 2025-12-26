@@ -53,8 +53,8 @@ public class Day6 {
             }
             String operator = operators.get(i);
             boolean add = operator.equals("+");
-            System.out.println("Operands " + operands + " and operator " + operator);
-            int accumulator = operands.get(0);
+
+            long accumulator = operands.get(0);
             for (int evan = 1; evan < operands.size(); evan ++) {
                 int operand = operands.get(evan);
                 if (add) {
@@ -64,6 +64,7 @@ public class Day6 {
                     accumulator *= operand;
                 }
             }
+            System.out.println("Operands " + operands + " and operator " + operator + " goes to " + accumulator);
             total += accumulator;
         }
         System.out.println(total);
