@@ -22,17 +22,17 @@ public class Day7 {
         int height = lines.size();
         int width = lines.getFirst().length();
         String[][] yx = new String[height][width];
-        for (int i = 0; i < lines.size(); i ++) {
+        for (int i = 0; i < lines.size(); i++) {
             String line = lines.get(i);
             String[] characters = line.split("");
-            for (int j = 0; j < characters.length; j ++) {
+            for (int j = 0; j < characters.length; j++) {
                 yx[i][j] = lines.get(i).substring(j, j + 1);
             }
         }
         // too inconvenient to do proper logic
         CopyOnWriteArrayList<Beam> beams = new CopyOnWriteArrayList<>();
         int firstBeamX = -1;
-        for (int i = 0; i < yx[0].length; i ++) {
+        for (int i = 0; i < yx[0].length; i++) {
             String character = yx[0][i];
             if (character.equals("S")) {
                 firstBeamX = i;
@@ -41,30 +41,34 @@ public class Day7 {
         beams.add(new Beam(0, firstBeamX));
 
         int relevantSplits = 0;
-        for (int y = 1; y < yx.length; y ++) {
+        for (int y = 1; y < height; y++) {
             ArrayList<Integer> occupiedX = new ArrayList<>();
             String[] characters = yx[y];
-            for (Beam beam: beams) {
-                beam.down();
-                int x = beam.getX();
-                if (characters[x].equals("^")) {
-                    beams.remove(beam);
-                    occupiedX.remove(Integer.valueOf(x));
-                    int leftX = x - 1;
-                    int rightX = x + 1;
-                    boolean anySplitIsRelevant = false;
-                    if (!occupiedX.contains(leftX)) {
-                        beams.add(new Beam(y, leftX));
-                        occupiedX.add(leftX);
-                        anySplitIsRelevant = true;
-                    }
-                    if (!occupiedX.contains(rightX)) {
-                        beams.add(new Beam(y, rightX));
-                        occupiedX.add(rightX);
-                        anySplitIsRelevant = true;
-                    }
-                    if (anySplitIsRelevant) {
-                        relevantSplits ++;
+            for (int x = 0; x < width; x++) {
+                for (Beam beam : beams) {
+                    int bx = beam.getX();
+                    if (bx == x) {
+                        beam.down();
+                        if (characters[x].equals("^")) {
+                            beams.remove(beam);
+                            occupiedX.remove(Integer.valueOf(x));
+                            int leftX = x - 1;
+                            int rightX = x + 1;
+                            boolean anySplitIsRelevant = false;
+                            if (!occupiedX.contains(leftX)) {
+                                beams.add(new Beam(y, leftX));
+                                occupiedX.add(leftX);
+                                anySplitIsRelevant = true;
+                            }
+                            if (!occupiedX.contains(rightX)) {
+                                beams.add(new Beam(y, rightX));
+                                occupiedX.add(rightX);
+                                anySplitIsRelevant = true;
+                            }
+                            if (anySplitIsRelevant) {
+                                relevantSplits++;
+                            }
+                        }
                     }
                 }
             }
@@ -89,7 +93,7 @@ public class Day7 {
         }
 
         private void down() {
-            this.why ++;
+            this.why++;
         }
 
         public int getY() {
