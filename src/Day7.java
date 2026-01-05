@@ -77,7 +77,23 @@ public class Day7 {
     }
 
     private static void part2() throws FileNotFoundException {
-
+        Scanner input = new Scanner(new File("my day 7 input.txt"));
+        int timelines = 1;
+        while (input.hasNextLine()) {
+            String nextLine = input.nextLine();
+            String[] chars = nextLine.split("");
+            for (int i = 0; i < chars.length; i ++) {
+                String ch = chars[i];
+                if (ch.equals("^")) {
+                    boolean valid = true;
+                    if ()
+                    if (valid) {
+                        timelines *= 2;
+                    }
+                }
+            }
+        }
+        System.out.println(timelines);
     }
 
     private static class Beam {
