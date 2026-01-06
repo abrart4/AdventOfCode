@@ -2,6 +2,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -9,7 +10,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Day7 {
     public static void main(String[] args) throws FileNotFoundException {
-        part1();
+        part2();
     }
 
     private static void part1() throws FileNotFoundException {
@@ -79,20 +80,12 @@ public class Day7 {
     private static void part2() throws FileNotFoundException {
         Scanner input = new Scanner(new File("my day 7 input.txt"));
         int timelines = 1;
+        List<String> lines = new ArrayList<>();
         while (input.hasNextLine()) {
-            String nextLine = input.nextLine();
-            String[] chars = nextLine.split("");
-            for (int i = 0; i < chars.length; i ++) {
-                String ch = chars[i];
-                if (ch.equals("^")) {
-                    boolean valid = true;
-                    if ()
-                    if (valid) {
-                        timelines *= 2;
-                    }
-                }
-            }
+            lines.add(input.nextLine());
         }
+        lines = lines.reversed();
+
         System.out.println(timelines);
     }
 
